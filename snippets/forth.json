@@ -1,0 +1,1290 @@
+{
+  "Colon definition": {
+    "prefix": "def",
+    "body": [
+      ": ${1:name} ( ${2:--} )",
+      "  $0",
+      ";"
+    ],
+    "description": "Define a Forth word with : ... ;"
+  },
+  "IF / THEN": {
+    "prefix": "if",
+    "body": [
+      "if",
+      "  $0",
+      "then"
+    ],
+    "description": "Conditional block"
+  },
+  "IF / ELSE / THEN": {
+    "prefix": "ife",
+    "body": [
+      "if",
+      "  ${1}",
+      "else",
+      "  $0",
+      "then"
+    ],
+    "description": "Conditional block with else branch"
+  },
+  "BEGIN / UNTIL": {
+    "prefix": "beginu",
+    "body": [
+      "begin",
+      "  $0",
+      "until"
+    ],
+    "description": "Loop until flag becomes true"
+  },
+  "BEGIN / AGAIN": {
+    "prefix": "begina",
+    "body": [
+      "begin",
+      "  $0",
+      "again"
+    ],
+    "description": "Infinite BEGIN/AGAIN loop"
+  },
+  "BEGIN / WHILE / REPEAT": {
+    "prefix": "beginw",
+    "body": [
+      "begin",
+      "  ${1:condition}",
+      "while",
+      "  $0",
+      "repeat"
+    ],
+    "description": "BEGIN/WHILE/REPEAT loop"
+  },
+  "DO / LOOP": {
+    "prefix": "do",
+    "body": [
+      "${1:limit} ${2:start} do",
+      "  $0",
+      "loop"
+    ],
+    "description": "Counted DO/LOOP"
+  },
+  "?DO / LOOP": {
+    "prefix": "?do",
+    "body": [
+      "${1:limit} ${2:start} ?do",
+      "  $0",
+      "loop"
+    ],
+    "description": "Conditional counted loop"
+  },
+  "CASE": {
+    "prefix": "case",
+    "body": [
+      "case",
+      "  ${1:value} of",
+      "    ${2}",
+      "  endof",
+      "  $0",
+      "endcase"
+    ],
+    "description": "CASE/OF/ENDOF/ENDCASE"
+  },
+  "VARIABLE": {
+    "prefix": "var",
+    "body": [
+      "variable ${1:name}"
+    ],
+    "description": "Define a variable"
+  },
+  "CONSTANT": {
+    "prefix": "const",
+    "body": [
+      "${1:value} constant ${2:name}"
+    ],
+    "description": "Define a constant"
+  },
+  "VALUE": {
+    "prefix": "value",
+    "body": [
+      "${1:value} value ${2:name}"
+    ],
+    "description": "Define a VALUE"
+  },
+  "CREATE / DOES>": {
+    "prefix": "createdoes",
+    "body": [
+      "create ${1:name}",
+      "  ${2}",
+      "does>",
+      "  $0"
+    ],
+    "description": "Create a defining word body"
+  },
+  "Print string": {
+    "prefix": "dotstr",
+    "body": [
+      ".\" ${1:text}\"$0"
+    ],
+    "description": "Print a string with .\""
+  },
+  "String literal": {
+    "prefix": "sstr",
+    "body": [
+      "s\" ${1:text}\"$0"
+    ],
+    "description": "Push string address and length with s\""
+  },
+  "OpenOS MMIO peek": {
+    "prefix": "peek",
+    "body": [
+      "${1:addr} ${2:4} peek$0"
+    ],
+    "description": "OpenOS: read bytes from an absolute address"
+  },
+  "OpenOS MMIO poke": {
+    "prefix": "poke",
+    "body": [
+      "${1:value} ${2:addr} ${3:4} poke$0"
+    ],
+    "description": "OpenOS: write bytes to an absolute address"
+  },
+  "OpenOS machine call": {
+    "prefix": "call",
+    "body": [
+      "${1:arg} ${2:addr} call$0"
+    ],
+    "description": "OpenOS: call machine code at an address"
+  },
+  "OpenOS hex bytes": {
+    "prefix": "hex,",
+    "body": [
+      "s\" ${1:hex bytes}\" hex,$0"
+    ],
+    "description": "OpenOS: decode/emit hexadecimal byte string"
+  },
+  "Stack: dup": {
+    "prefix": "dup",
+    "body": [
+      "dup"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: drop": {
+    "prefix": "drop",
+    "body": [
+      "drop"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: swap": {
+    "prefix": "swap",
+    "body": [
+      "swap"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: over": {
+    "prefix": "over",
+    "body": [
+      "over"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: rot": {
+    "prefix": "rot",
+    "body": [
+      "rot"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: ?dup": {
+    "prefix": "?dup",
+    "body": [
+      "?dup"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: nip": {
+    "prefix": "nip",
+    "body": [
+      "nip"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: tuck": {
+    "prefix": "tuck",
+    "body": [
+      "tuck"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: 2dup": {
+    "prefix": "2dup",
+    "body": [
+      "2dup"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: 2drop": {
+    "prefix": "2drop",
+    "body": [
+      "2drop"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: 2swap": {
+    "prefix": "2swap",
+    "body": [
+      "2swap"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: 2over": {
+    "prefix": "2over",
+    "body": [
+      "2over"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: pick": {
+    "prefix": "pick",
+    "body": [
+      "pick"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: roll": {
+    "prefix": "roll",
+    "body": [
+      "roll"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Stack: depth": {
+    "prefix": "depth",
+    "body": [
+      "depth"
+    ],
+    "description": "Stack Forth word"
+  },
+  "Return stack: >r": {
+    "prefix": ">r",
+    "body": [
+      ">r"
+    ],
+    "description": "Return stack Forth word"
+  },
+  "Return stack: r>": {
+    "prefix": "r>",
+    "body": [
+      "r>"
+    ],
+    "description": "Return stack Forth word"
+  },
+  "Return stack: r@": {
+    "prefix": "r@",
+    "body": [
+      "r@"
+    ],
+    "description": "Return stack Forth word"
+  },
+  "Return stack: 2>r": {
+    "prefix": "2>r",
+    "body": [
+      "2>r"
+    ],
+    "description": "Return stack Forth word"
+  },
+  "Return stack: 2r>": {
+    "prefix": "2r>",
+    "body": [
+      "2r>"
+    ],
+    "description": "Return stack Forth word"
+  },
+  "Return stack: 2r@": {
+    "prefix": "2r@",
+    "body": [
+      "2r@"
+    ],
+    "description": "Return stack Forth word"
+  },
+  "Arithmetic: +": {
+    "prefix": "+",
+    "body": [
+      "+"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: -": {
+    "prefix": "-",
+    "body": [
+      "-"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: *": {
+    "prefix": "*",
+    "body": [
+      "*"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: /": {
+    "prefix": "/",
+    "body": [
+      "/"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: mod": {
+    "prefix": "mod",
+    "body": [
+      "mod"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: /mod": {
+    "prefix": "/mod",
+    "body": [
+      "/mod"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: */": {
+    "prefix": "*/",
+    "body": [
+      "*/"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: */mod": {
+    "prefix": "*/mod",
+    "body": [
+      "*/mod"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: fm/mod": {
+    "prefix": "fm/mod",
+    "body": [
+      "fm/mod"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: sm/rem": {
+    "prefix": "sm/rem",
+    "body": [
+      "sm/rem"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: m*": {
+    "prefix": "m*",
+    "body": [
+      "m*"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: um*": {
+    "prefix": "um*",
+    "body": [
+      "um*"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: um/mod": {
+    "prefix": "um/mod",
+    "body": [
+      "um/mod"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: abs": {
+    "prefix": "abs",
+    "body": [
+      "abs"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: negate": {
+    "prefix": "negate",
+    "body": [
+      "negate"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: min": {
+    "prefix": "min",
+    "body": [
+      "min"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: max": {
+    "prefix": "max",
+    "body": [
+      "max"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: 1+": {
+    "prefix": "1+",
+    "body": [
+      "1+"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: 1-": {
+    "prefix": "1-",
+    "body": [
+      "1-"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: 2*": {
+    "prefix": "2*",
+    "body": [
+      "2*"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: 2/": {
+    "prefix": "2/",
+    "body": [
+      "2/"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Arithmetic: s>d": {
+    "prefix": "s>d",
+    "body": [
+      "s>d"
+    ],
+    "description": "Arithmetic Forth word"
+  },
+  "Logic: and": {
+    "prefix": "and",
+    "body": [
+      "and"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: or": {
+    "prefix": "or",
+    "body": [
+      "or"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: xor": {
+    "prefix": "xor",
+    "body": [
+      "xor"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: invert": {
+    "prefix": "invert",
+    "body": [
+      "invert"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: lshift": {
+    "prefix": "lshift",
+    "body": [
+      "lshift"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: rshift": {
+    "prefix": "rshift",
+    "body": [
+      "rshift"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: =": {
+    "prefix": "=",
+    "body": [
+      "="
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: <>": {
+    "prefix": "<>",
+    "body": [
+      "<>"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: <": {
+    "prefix": "<",
+    "body": [
+      "<"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: >": {
+    "prefix": ">",
+    "body": [
+      ">"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: 0=": {
+    "prefix": "0=",
+    "body": [
+      "0="
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: 0<>": {
+    "prefix": "0<>",
+    "body": [
+      "0<>"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: 0<": {
+    "prefix": "0<",
+    "body": [
+      "0<"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: 0>": {
+    "prefix": "0>",
+    "body": [
+      "0>"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: u<": {
+    "prefix": "u<",
+    "body": [
+      "u<"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Logic: u>": {
+    "prefix": "u>",
+    "body": [
+      "u>"
+    ],
+    "description": "Logic Forth word"
+  },
+  "Control: else": {
+    "prefix": "else",
+    "body": [
+      "else"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: then": {
+    "prefix": "then",
+    "body": [
+      "then"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: begin": {
+    "prefix": "begin",
+    "body": [
+      "begin"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: until": {
+    "prefix": "until",
+    "body": [
+      "until"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: again": {
+    "prefix": "again",
+    "body": [
+      "again"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: while": {
+    "prefix": "while",
+    "body": [
+      "while"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: repeat": {
+    "prefix": "repeat",
+    "body": [
+      "repeat"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: loop": {
+    "prefix": "loop",
+    "body": [
+      "loop"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: +loop": {
+    "prefix": "+loop",
+    "body": [
+      "+loop"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: leave": {
+    "prefix": "leave",
+    "body": [
+      "leave"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: unloop": {
+    "prefix": "unloop",
+    "body": [
+      "unloop"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: exit": {
+    "prefix": "exit",
+    "body": [
+      "exit"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: recurse": {
+    "prefix": "recurse",
+    "body": [
+      "recurse"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: of": {
+    "prefix": "of",
+    "body": [
+      "of"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: endof": {
+    "prefix": "endof",
+    "body": [
+      "endof"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: endcase": {
+    "prefix": "endcase",
+    "body": [
+      "endcase"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: execute": {
+    "prefix": "execute",
+    "body": [
+      "execute"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: catch": {
+    "prefix": "catch",
+    "body": [
+      "catch"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: throw": {
+    "prefix": "throw",
+    "body": [
+      "throw"
+    ],
+    "description": "Control Forth word"
+  },
+  "Control: abort": {
+    "prefix": "abort",
+    "body": [
+      "abort"
+    ],
+    "description": "Control Forth word"
+  },
+  "Memory: @": {
+    "prefix": "@",
+    "body": [
+      "@"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: !": {
+    "prefix": "!",
+    "body": [
+      "!"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: +!": {
+    "prefix": "+!",
+    "body": [
+      "+!"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: 2@": {
+    "prefix": "2@",
+    "body": [
+      "2@"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: 2!": {
+    "prefix": "2!",
+    "body": [
+      "2!"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: c@": {
+    "prefix": "c@",
+    "body": [
+      "c@"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: c!": {
+    "prefix": "c!",
+    "body": [
+      "c!"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: fill": {
+    "prefix": "fill",
+    "body": [
+      "fill"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: erase": {
+    "prefix": "erase",
+    "body": [
+      "erase"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: move": {
+    "prefix": "move",
+    "body": [
+      "move"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: cells": {
+    "prefix": "cells",
+    "body": [
+      "cells"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: cell+": {
+    "prefix": "cell+",
+    "body": [
+      "cell+"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: chars": {
+    "prefix": "chars",
+    "body": [
+      "chars"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: char+": {
+    "prefix": "char+",
+    "body": [
+      "char+"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: align": {
+    "prefix": "align",
+    "body": [
+      "align"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: aligned": {
+    "prefix": "aligned",
+    "body": [
+      "aligned"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: allot": {
+    "prefix": "allot",
+    "body": [
+      "allot"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: here": {
+    "prefix": "here",
+    "body": [
+      "here"
+    ],
+    "description": "Memory Forth word"
+  },
+  "Memory: pad": {
+    "prefix": "pad",
+    "body": [
+      "pad"
+    ],
+    "description": "Memory Forth word"
+  },
+  "I/O: .": {
+    "prefix": ".",
+    "body": [
+      "."
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: emit": {
+    "prefix": "emit",
+    "body": [
+      "emit"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: type": {
+    "prefix": "type",
+    "body": [
+      "type"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: cr": {
+    "prefix": "cr",
+    "body": [
+      "cr"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: space": {
+    "prefix": "space",
+    "body": [
+      "space"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: spaces": {
+    "prefix": "spaces",
+    "body": [
+      "spaces"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: .s": {
+    "prefix": ".s",
+    "body": [
+      ".s"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: .r": {
+    "prefix": ".r",
+    "body": [
+      ".r"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: u.": {
+    "prefix": "u.",
+    "body": [
+      "u."
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: u.r": {
+    "prefix": "u.r",
+    "body": [
+      "u.r"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: key": {
+    "prefix": "key",
+    "body": [
+      "key"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: accept": {
+    "prefix": "accept",
+    "body": [
+      "accept"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: parse": {
+    "prefix": "parse",
+    "body": [
+      "parse"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: parse-name": {
+    "prefix": "parse-name",
+    "body": [
+      "parse-name"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: word": {
+    "prefix": "word",
+    "body": [
+      "word"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: refill": {
+    "prefix": "refill",
+    "body": [
+      "refill"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: source": {
+    "prefix": "source",
+    "body": [
+      "source"
+    ],
+    "description": "I/O Forth word"
+  },
+  "I/O: source-id": {
+    "prefix": "source-id",
+    "body": [
+      "source-id"
+    ],
+    "description": "I/O Forth word"
+  },
+  "Dictionary: find": {
+    "prefix": "find",
+    "body": [
+      "find"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: '": {
+    "prefix": "'",
+    "body": [
+      "'"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: [']": {
+    "prefix": "[']",
+    "body": [
+      "[']"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: create": {
+    "prefix": "create",
+    "body": [
+      "create"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: does>": {
+    "prefix": "does>",
+    "body": [
+      "does>"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: variable": {
+    "prefix": "variable",
+    "body": [
+      "variable"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: constant": {
+    "prefix": "constant",
+    "body": [
+      "constant"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: to": {
+    "prefix": "to",
+    "body": [
+      "to"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: defer": {
+    "prefix": "defer",
+    "body": [
+      "defer"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: defer!": {
+    "prefix": "defer!",
+    "body": [
+      "defer!"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: defer@": {
+    "prefix": "defer@",
+    "body": [
+      "defer@"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: is": {
+    "prefix": "is",
+    "body": [
+      "is"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: marker": {
+    "prefix": "marker",
+    "body": [
+      "marker"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: words": {
+    "prefix": "words",
+    "body": [
+      "words"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: immediate": {
+    "prefix": "immediate",
+    "body": [
+      "immediate"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: postpone": {
+    "prefix": "postpone",
+    "body": [
+      "postpone"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Dictionary: compile,": {
+    "prefix": "compile,",
+    "body": [
+      "compile,"
+    ],
+    "description": "Dictionary Forth word"
+  },
+  "Base: decimal": {
+    "prefix": "decimal",
+    "body": [
+      "decimal"
+    ],
+    "description": "Base Forth word"
+  },
+  "Base: hex": {
+    "prefix": "hex",
+    "body": [
+      "hex"
+    ],
+    "description": "Base Forth word"
+  },
+  "Base: base": {
+    "prefix": "base",
+    "body": [
+      "base"
+    ],
+    "description": "Base Forth word"
+  },
+  "Base: true": {
+    "prefix": "true",
+    "body": [
+      "true"
+    ],
+    "description": "Base Forth word"
+  },
+  "Base: false": {
+    "prefix": "false",
+    "body": [
+      "false"
+    ],
+    "description": "Base Forth word"
+  },
+  "Files: open-file": {
+    "prefix": "open-file",
+    "body": [
+      "open-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: create-file": {
+    "prefix": "create-file",
+    "body": [
+      "create-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: close-file": {
+    "prefix": "close-file",
+    "body": [
+      "close-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: delete-file": {
+    "prefix": "delete-file",
+    "body": [
+      "delete-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: rename-file": {
+    "prefix": "rename-file",
+    "body": [
+      "rename-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: file-status": {
+    "prefix": "file-status",
+    "body": [
+      "file-status"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: file-position": {
+    "prefix": "file-position",
+    "body": [
+      "file-position"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: reposition-file": {
+    "prefix": "reposition-file",
+    "body": [
+      "reposition-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: file-size": {
+    "prefix": "file-size",
+    "body": [
+      "file-size"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: resize-file": {
+    "prefix": "resize-file",
+    "body": [
+      "resize-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: read-file": {
+    "prefix": "read-file",
+    "body": [
+      "read-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: write-file": {
+    "prefix": "write-file",
+    "body": [
+      "write-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: read-line": {
+    "prefix": "read-line",
+    "body": [
+      "read-line"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: write-line": {
+    "prefix": "write-line",
+    "body": [
+      "write-line"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: flush-file": {
+    "prefix": "flush-file",
+    "body": [
+      "flush-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: include-file": {
+    "prefix": "include-file",
+    "body": [
+      "include-file"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: included": {
+    "prefix": "included",
+    "body": [
+      "included"
+    ],
+    "description": "Files Forth word"
+  },
+  "Files: include": {
+    "prefix": "include",
+    "body": [
+      "include"
+    ],
+    "description": "Files Forth word"
+  },
+  "OpenOS: data-base": {
+    "prefix": "data-base",
+    "body": [
+      "data-base"
+    ],
+    "description": "OpenOS Forth word"
+  },
+  "OpenOS/operator: <=": {
+    "prefix": "<=",
+    "body": [
+      "<="
+    ],
+    "description": "OpenOS/Forth comparison operator: less than or equal"
+  },
+  "OpenOS/operator: >=": {
+    "prefix": ">=",
+    "body": [
+      ">="
+    ],
+    "description": "OpenOS/Forth comparison operator: greater than or equal"
+  },
+  "Loop index: i": {
+    "prefix": "i",
+    "body": [
+      "i"
+    ],
+    "description": "Current DO-loop index"
+  },
+  "Outer loop index: j": {
+    "prefix": "j",
+    "body": [
+      "j"
+    ],
+    "description": "Outer DO-loop index in a nested loop"
+  }
+}

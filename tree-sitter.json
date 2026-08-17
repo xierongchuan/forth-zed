@@ -1,0 +1,16 @@
+{
+  "grammars": [
+    {
+      "name": "forth",
+      "camelcase": "Forth",
+      "scope": "source.forth",
+      "path": ".",
+      "file-types": ["fs", "fth", "4th", "frt", "blk"]
+    }
+  ],
+  "metadata": {
+    "version": "0.3.0",
+    "license": "MIT",
+    "description": "Self-contained ANS/OpenOS Forth grammar for Zed"
+  }
+}

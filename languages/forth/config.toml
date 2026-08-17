@@ -1,0 +1,14 @@
+name = "Forth / OpenOS Forth"
+grammar = "forth"
+path_suffixes = ["fs", "fth", "4th", "frt", "blk"]
+line_comments = ["\\ "]
+tab_size = 2
+hard_tabs = false
+first_line_pattern = "^#!.*\\b(gforth|forth|openos-forth)\\b"
+
+word_characters = ["?", "!", "@", "#", "$", "%", "&", "'", "+", "-", "*", "/", "<", ">", "=", "_", ",", ".", ":"]
+
+brackets = [
+  { start = "(", end = ")", close = true, newline = false, not_in = ["comment", "string"] },
+  { start = "\"", end = "\"", close = true, newline = false, not_in = ["comment", "string"] },
+]

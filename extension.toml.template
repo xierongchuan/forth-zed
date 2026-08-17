@@ -1,0 +1,12 @@
+id = "forth"
+name = "Forth / OpenOS Forth"
+description = "Self-contained ANS Forth and OpenOS Forth support for Zed: highlighting, outline, indentation, comments, text objects, and snippet completions."
+version = "0.1.0"
+schema_version = 1
+authors = ["https://github.com/xierongchuan"]
+repository = "__LOCAL_REPOSITORY__"
+snippets = ["./snippets/forth.json"]
+
+[grammars.forth]
+repository = "__LOCAL_REPOSITORY__"
+rev = "__GRAMMAR_REV__"

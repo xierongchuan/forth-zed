@@ -1,0 +1,26 @@
+==================
+OpenOS Forth basics
+==================
+
+: square ( n -- n2 ) dup * ;
+$10001000 4 peek .
+s" 1305150067800000" hex,
+." Hello, world!" cr
+
+---
+
+(source_file
+  (colon)
+  (word)
+  (stack_effect)
+  (word)
+  (word)
+  (semicolon)
+  (number)
+  (number)
+  (word)
+  (word)
+  (string)
+  (word)
+  (string)
+  (word))
