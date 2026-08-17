@@ -3,7 +3,7 @@ name = "Forth / OpenOS Forth"
 description = "Self-contained ANS Forth and OpenOS Forth support for Zed: highlighting, outline, indentation, comments, text objects, and snippet completions."
 version = "0.1.0"
 schema_version = 1
-authors = ["Temur <xierongchuan@gmail.com>"]
+authors = ["Temur <xierongchuan@tutamail.com>"]
 repository = "__LOCAL_REPOSITORY__"
 snippets = ["./snippets/forth.json"]
 
