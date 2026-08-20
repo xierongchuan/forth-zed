@@ -1,17 +1,11 @@
-\ counter.fs — демонстрация многозадачности на Forth
+\ counter.fs — пример счётчика с аргументом программы
 \
-\ Аналог usr/bin/counter: считает от 0 до n-1, печатая «[pid P] counter: i»,
-\ и периодически уступает процессор (MS — сон в миллисекундах, как sleep(300)
-\ в C-шном counter).
+\ Показывает VARIABLE, GETPID, ARGC, ARG, S>NUMBER, DO/LOOP и MS.
+\ Если аргумент не передан, используется значение 10.
 \
-\ Число шагов передаётся аргументом через --args:
-\
-\   forth usr/examples/counter.fs --args=100
-\
-\ Без аргумента — 10 шагов. Доступные слова для аргументов:
-\   ARGC       ( -- n )          число аргументов программы
-\   N ARG      ( n -- addr len ) N-й аргумент как строка
-\   S>NUMBER   ( addr len -- n ) строка -> число
+\ ARGC       ( -- n )
+\ N ARG      ( n -- addr len )
+\ S>NUMBER   ( addr len -- n )
 
 variable mypid
 
