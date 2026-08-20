@@ -1,13 +1,12 @@
-# Forth / OpenOS Forth for Zed
+# OSS / ANS Forth for Zed
 
-A self-contained Zed language extension for ANS-style Forth plus the OpenOS Forth dialect.
-The same repository is also the bundled Tree-sitter grammar repository. It has no runtime
-or source dependency on a third-party grammar repository and contains its generated
-`src/parser.c`.
+A self-contained Zed language extension for ANS-style Forth and OOS Forth, the Forth version used by OpenOS.
+
+The extension provides syntax highlighting, outline support, indentation, comments, text objects and snippets without requiring an LSP.
 
 ## Install locally
 
-After extracting the ZIP, run once from this directory:
+Run once from this directory:
 
 ```bash
 ./prepare.sh
@@ -15,30 +14,26 @@ After extracting the ZIP, run once from this directory:
 
 Then open Zed and run `zed: install dev extension`, selecting this directory.
 
-`prepare.sh` does not download anything. It creates a local Git commit, computes this
-folder's `file://` URL and writes `extension.toml` with that local URL and exact local
-revision. This small preparation step is necessary because Zed requires every grammar
-entry to specify a Git repository and revision, even when the grammar lives locally.
-
 ## Included editor support
 
 - `.fs`, `.fth`, `.4th`, `.frt`, `.blk` detection
 - Tree-sitter highlighting and lexical structure
-- `\` line comments, parenthesized comments and `( ... -- ... )` stack effects
-- `: name ... ;` definition names in Outline
+- `\` line comments and parenthesized `( ... )` comments
+- structured stack effects such as `( addr len -- buf n )`
+- stack-effect parameter highlighting distinct from comment text
+- `: name ... ;` definitions in Outline
+- variables, constants and other defining words in Outline
 - indentation and structural `:` / `;` matching
 - comment text objects
-- ANS Forth words and operators
+- ANS-style Forth words, operators and control flow
 - snippet-based completion without an LSP
-- OpenOS words such as `peek`, `poke`, `call`, `hex,`, `data-base`, `<=`, `>=`
-- `$HEX`, `0xHEX`, `%binary`, `&octal`, decimal/float numbers
+- OOS Forth words including `depth`, `getpid`, `argc`, `arg`, `s>number`, `load-file`, `save-file`, `peek`, `poke`, `call`, `hex,`, `data-base`, `ms`, `bye`, `<=`, and `>=`
+- `$HEX`, `0xHEX`, `%binary`, `&octal`, decimal and floating-point numbers
 - `."..."`, `s"..."`, `c"..."`, `abort"..."` strings
 
 ## Regression examples
 
-`examples/openos/` contains the 11 OpenOS Forth programs used while adapting the extension:
-`fact`, `fibo`, `fizzbuzz`, `greet`, `hello`, `launch`, `mmio`, `multable`, `primes`,
-`squares`, and `stars`.
+`examples/openos/` contains small OOS Forth examples used to verify highlighting and parsing of definitions, variables, stack effects, control flow, strings, arithmetic, file/process words and MMIO-style words.
 
 ## Verify the package
 
@@ -46,14 +41,12 @@ entry to specify a Git repository and revision, even when the grammar lives loca
 ./verify.sh
 ```
 
-The check validates JSON/TOML, query node names, the bundled C parser when a C compiler is
-available, all 11 OpenOS examples, and that no external repository URL slipped into the
-runtime source.
+The check validates JSON/TOML files, Tree-sitter query node names, the bundled parser, regression examples and the absence of accidental external runtime dependencies.
 
-## Why the grammar is intentionally flat
+If the `tree-sitter` CLI is installed, the verification script also runs the corpus tests.
 
-Forth can extend its own dictionary and compilation semantics at run time. A parser that
-tries to impose a C-like statement/expression AST quickly becomes wrong for user-defined
-defining words. This grammar therefore parses the reliable lexical layer and lets Zed
-queries classify control-flow words, stack operations, defining words, I/O words and
-OpenOS-specific vocabulary. That keeps editing resilient even when OpenOS adds new words.
+## Grammar design
+
+Forth can extend its dictionary and compilation semantics at run time, so the grammar keeps the general language structure intentionally lightweight.
+
+Stack effects are parsed more precisely because they have stable documentation syntax. Expressions such as `( addr len -- buf n )` expose delimiters, parameter text and the `--` separator separately, allowing Zed to style stack-effect parameters independently from ordinary comments.

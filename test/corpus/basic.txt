@@ -1,8 +1,9 @@
 ==================
-OpenOS Forth basics
+OOS Forth basics
 ==================
 
 : square ( n -- n2 ) dup * ;
+( ordinary parenthesized comment )
 $10001000 4 peek .
 s" 1305150067800000" hex,
 ." Hello, world!" cr
@@ -12,10 +13,19 @@ s" 1305150067800000" hex,
 (source_file
   (colon)
   (word)
-  (stack_effect)
+  (stack_effect
+    (paren_delimiter)
+    (paren_content)
+    (stack_effect_separator)
+    (paren_content)
+    (paren_delimiter))
   (word)
   (word)
   (semicolon)
+  (paren_comment
+    (paren_delimiter)
+    (paren_content)
+    (paren_delimiter))
   (number)
   (number)
   (word)

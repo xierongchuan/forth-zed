@@ -1,20 +1,21 @@
 /*
- * OpenOS Forth Tree-sitter parser.
+ * OOS Forth Tree-sitter parser.
  *
- * This parser is intentionally flat. Forth's dictionary and defining words can
- * extend the language at run time, so the reliable editor-level structure is a
- * stream of lexical Forth tokens. Zed queries add ANS/OpenOS semantics on top.
+ * Forth remains deliberately flat at the editor level, with one exception:
+ * parenthesized stack effects are split into delimiters, parameter text, and
+ * the "--" separator. This lets Zed distinguish stack-effect parameters from
+ * ordinary comments without pretending to understand run-time Forth semantics.
  *
  * ABI: Tree-sitter language ABI 15.
  */
 #include "tree_sitter/parser.h"
 
 #define LANGUAGE_VERSION 15
-#define STATE_COUNT 6
-#define LARGE_STATE_COUNT 6
-#define SYMBOL_COUNT 12
+#define STATE_COUNT 18
+#define LARGE_STATE_COUNT 18
+#define SYMBOL_COUNT 15
 #define ALIAS_COUNT 0
-#define TOKEN_COUNT 10
+#define TOKEN_COUNT 11
 #define EXTERNAL_TOKEN_COUNT 0
 #define FIELD_COUNT 0
 #define MAX_ALIAS_SEQUENCE_LENGTH 1
@@ -24,29 +25,35 @@
 
 enum ts_symbol_identifiers {
   sym_line_comment = 1,
-  sym_paren_comment = 2,
-  sym_stack_effect = 3,
-  sym_string = 4,
-  sym_number = 5,
-  sym_character_literal = 6,
-  sym_colon = 7,
-  sym_semicolon = 8,
-  sym_word = 9,
-  sym_source_file = 10,
-  aux_sym_source_file_repeat1 = 11,
+  sym_paren_delimiter = 2,
+  sym_paren_content = 3,
+  sym_stack_effect_separator = 4,
+  sym_string = 5,
+  sym_number = 6,
+  sym_character_literal = 7,
+  sym_colon = 8,
+  sym_semicolon = 9,
+  sym_word = 10,
+  sym_paren_comment = 11,
+  sym_stack_effect = 12,
+  sym_source_file = 13,
+  aux_sym_source_file_repeat1 = 14,
 };
 
 static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
   [sym_line_comment] = "line_comment",
-  [sym_paren_comment] = "paren_comment",
-  [sym_stack_effect] = "stack_effect",
+  [sym_paren_delimiter] = "paren_delimiter",
+  [sym_paren_content] = "paren_content",
+  [sym_stack_effect_separator] = "stack_effect_separator",
   [sym_string] = "string",
   [sym_number] = "number",
   [sym_character_literal] = "character_literal",
   [sym_colon] = "colon",
   [sym_semicolon] = "semicolon",
   [sym_word] = "word",
+  [sym_paren_comment] = "paren_comment",
+  [sym_stack_effect] = "stack_effect",
   [sym_source_file] = "source_file",
   [aux_sym_source_file_repeat1] = "source_file_repeat1",
 };
@@ -54,14 +61,17 @@ static const char * const ts_symbol_names[] = {
 static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
   [sym_line_comment] = sym_line_comment,
-  [sym_paren_comment] = sym_paren_comment,
-  [sym_stack_effect] = sym_stack_effect,
+  [sym_paren_delimiter] = sym_paren_delimiter,
+  [sym_paren_content] = sym_paren_content,
+  [sym_stack_effect_separator] = sym_stack_effect_separator,
   [sym_string] = sym_string,
   [sym_number] = sym_number,
   [sym_character_literal] = sym_character_literal,
   [sym_colon] = sym_colon,
   [sym_semicolon] = sym_semicolon,
   [sym_word] = sym_word,
+  [sym_paren_comment] = sym_paren_comment,
+  [sym_stack_effect] = sym_stack_effect,
   [sym_source_file] = sym_source_file,
   [aux_sym_source_file_repeat1] = aux_sym_source_file_repeat1,
 };
@@ -69,14 +79,17 @@ static const TSSymbol ts_symbol_map[] = {
 static const TSSymbolMetadata ts_symbol_metadata[] = {
   [ts_builtin_sym_end] = {.visible = false, .named = true},
   [sym_line_comment] = {.visible = true, .named = true},
-  [sym_paren_comment] = {.visible = true, .named = true},
-  [sym_stack_effect] = {.visible = true, .named = true},
+  [sym_paren_delimiter] = {.visible = true, .named = true},
+  [sym_paren_content] = {.visible = true, .named = true},
+  [sym_stack_effect_separator] = {.visible = true, .named = true},
   [sym_string] = {.visible = true, .named = true},
   [sym_number] = {.visible = true, .named = true},
   [sym_character_literal] = {.visible = true, .named = true},
   [sym_colon] = {.visible = true, .named = true},
   [sym_semicolon] = {.visible = true, .named = true},
   [sym_word] = {.visible = true, .named = true},
+  [sym_paren_comment] = {.visible = true, .named = true},
+  [sym_stack_effect] = {.visible = true, .named = true},
   [sym_source_file] = {.visible = true, .named = true},
   [aux_sym_source_file_repeat1] = {.visible = false, .named = false},
 };
@@ -85,10 +98,26 @@ static const TSSymbol ts_alias_sequences[PRODUCTION_ID_COUNT][MAX_ALIAS_SEQUENCE
   [0] = {0},
 };
 
-static const TSStateId ts_primary_state_ids[STATE_COUNT] = {0, 1, 2, 3, 4, 5};
+static const TSStateId ts_primary_state_ids[STATE_COUNT] = {
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+};
+
+enum forth_lex_state {
+  LEX_TOP = 0,
+  LEX_PAREN_LEFT = 1,
+  LEX_PAREN_AFTER_LEFT = 2,
+  LEX_PAREN_RIGHT = 3,
+  LEX_PAREN_CLOSE = 4,
+};
 
 static inline bool forth_space(int32_t c) {
   return c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v';
+}
+
+static inline void skip_space(TSLexer *lexer) {
+  while (!lexer->eof(lexer) && forth_space(lexer->lookahead)) {
+    lexer->advance(lexer, true);
+  }
 }
 
 static inline bool ascii_digit(char c) { return c >= '0' && c <= '9'; }
@@ -154,18 +183,114 @@ static bool is_string_opener(const char *s, unsigned n) {
   return false;
 }
 
-static bool ts_lex(TSLexer *lexer, TSStateId state) {
-  (void)state;
+static bool emit_end(TSLexer *lexer) {
+  lexer->result_symbol = ts_builtin_sym_end;
+  lexer->mark_end(lexer);
+  return true;
+}
 
-  while (!lexer->eof(lexer) && forth_space(lexer->lookahead)) {
-    lexer->advance(lexer, true);
+static bool emit_paren_delimiter(TSLexer *lexer) {
+  lexer->advance(lexer, false);
+  lexer->mark_end(lexer);
+  lexer->result_symbol = sym_paren_delimiter;
+  return true;
+}
+
+/*
+ * Scan the text between '(' and either '--' or ')'. The token may contain
+ * spaces and nested parenthesized notation such as fib(n). Trailing spaces
+ * are intentionally left outside the token, so only meaningful parameter or
+ * comment text receives a semantic highlight.
+ */
+static bool lex_paren_content(TSLexer *lexer, bool stop_at_separator) {
+  skip_space(lexer);
+  if (lexer->eof(lexer)) return emit_end(lexer);
+  if (lexer->lookahead == ')') return emit_paren_delimiter(lexer);
+
+  bool started = false;
+  int depth = 0;
+
+  while (!lexer->eof(lexer)) {
+    int32_t c = lexer->lookahead;
+
+    if (depth == 0 && c == ')') break;
+
+    if (depth == 0 && stop_at_separator && c == '-') {
+      /* Look ahead for '--'. mark_end keeps the current token boundary, so
+         when content precedes the separator Tree-sitter resumes at '--'. */
+      lexer->advance(lexer, false);
+      if (lexer->lookahead == '-') {
+        if (!started) {
+          lexer->advance(lexer, false);
+          lexer->mark_end(lexer);
+          lexer->result_symbol = sym_stack_effect_separator;
+          return true;
+        }
+        lexer->advance(lexer, false);
+        lexer->result_symbol = sym_paren_content;
+        return true;
+      }
+      started = true;
+      lexer->mark_end(lexer);
+      continue;
+    }
+
+    if (c == '(') {
+      depth++;
+      started = true;
+      lexer->advance(lexer, false);
+      lexer->mark_end(lexer);
+      continue;
+    }
+    if (c == ')' && depth > 0) {
+      depth--;
+      started = true;
+      lexer->advance(lexer, false);
+      lexer->mark_end(lexer);
+      continue;
+    }
+
+    lexer->advance(lexer, false);
+    if (!forth_space(c)) {
+      started = true;
+      lexer->mark_end(lexer);
+    }
   }
 
-  if (lexer->eof(lexer)) {
-    lexer->result_symbol = ts_builtin_sym_end;
-    lexer->mark_end(lexer);
+  if (started) {
+    lexer->result_symbol = sym_paren_content;
     return true;
   }
+  if (!lexer->eof(lexer) && lexer->lookahead == ')') return emit_paren_delimiter(lexer);
+  return emit_end(lexer);
+}
+
+static bool lex_after_left(TSLexer *lexer) {
+  skip_space(lexer);
+  if (lexer->eof(lexer)) return emit_end(lexer);
+  if (lexer->lookahead == ')') return emit_paren_delimiter(lexer);
+  if (lexer->lookahead == '-') {
+    lexer->advance(lexer, false);
+    if (lexer->lookahead == '-') {
+      lexer->advance(lexer, false);
+      lexer->mark_end(lexer);
+      lexer->result_symbol = sym_stack_effect_separator;
+      return true;
+    }
+  }
+  return false;
+}
+
+static bool lex_close(TSLexer *lexer) {
+  skip_space(lexer);
+  if (lexer->eof(lexer)) return emit_end(lexer);
+  if (lexer->lookahead == ')') return emit_paren_delimiter(lexer);
+  return false;
+}
+
+static bool lex_top(TSLexer *lexer) {
+  skip_space(lexer);
+  if (lexer->eof(lexer)) return emit_end(lexer);
 
   /* Backslash comment: from standalone '\\' through end of line. */
   if (lexer->lookahead == '\\') {
@@ -177,21 +302,9 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
     return true;
   }
 
-  /* Parenthesized comments; stack effects are recognized by a "--" inside. */
-  if (lexer->lookahead == '(') {
-    bool dash = false;
-    bool stack_effect = false;
-    while (!lexer->eof(lexer)) {
-      int32_t c = lexer->lookahead;
-      lexer->advance(lexer, false);
-      lexer->mark_end(lexer);
-      if (dash && c == '-') stack_effect = true;
-      dash = (c == '-');
-      if (c == ')') break;
-    }
-    lexer->result_symbol = stack_effect ? sym_stack_effect : sym_paren_comment;
-    return true;
-  }
+  /* Parenthesized forms are parsed structurally so stack effects can expose
+     their parameter text while ordinary '( ... )' remains a comment node. */
+  if (lexer->lookahead == '(') return emit_paren_delimiter(lexer);
 
   char buf[256];
   unsigned len = 0;
@@ -218,41 +331,50 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
   }
 
   if (ascii && len <= sizeof(buf)) {
-    if (len == 1 && buf[0] == ':') {
-      lexer->result_symbol = sym_colon;
-      return true;
-    }
-    if (len == 1 && buf[0] == ';') {
-      lexer->result_symbol = sym_semicolon;
-      return true;
-    }
-    if (len == 3 && buf[0] == '\'' && buf[2] == '\'') {
-      lexer->result_symbol = sym_character_literal;
-      return true;
-    }
-    if (token_is_number(buf, len)) {
-      lexer->result_symbol = sym_number;
-      return true;
-    }
+    if (len == 1 && buf[0] == ':') { lexer->result_symbol = sym_colon; return true; }
+    if (len == 1 && buf[0] == ';') { lexer->result_symbol = sym_semicolon; return true; }
+    if (len == 3 && buf[0] == '\'' && buf[2] == '\'') { lexer->result_symbol = sym_character_literal; return true; }
+    if (token_is_number(buf, len)) { lexer->result_symbol = sym_number; return true; }
   }
 
   lexer->result_symbol = sym_word;
   return true;
 }
 
+static bool ts_lex(TSLexer *lexer, TSStateId state) {
+  switch (state) {
+    case LEX_PAREN_LEFT: return lex_paren_content(lexer, true);
+    case LEX_PAREN_AFTER_LEFT: return lex_after_left(lexer);
+    case LEX_PAREN_RIGHT: return lex_paren_content(lexer, false);
+    case LEX_PAREN_CLOSE: return lex_close(lexer);
+    case LEX_TOP:
+    default: return lex_top(lexer);
+  }
+}
+
 static const TSLexerMode ts_lex_modes[STATE_COUNT] = {
-  [0] = {.lex_state = 0},
-  [1] = {.lex_state = 0},
-  [2] = {.lex_state = 0},
-  [3] = {.lex_state = 0},
-  [4] = {.lex_state = 0},
-  [5] = {.lex_state = 0},
+  [0] = {.lex_state = LEX_TOP},
+  [1] = {.lex_state = LEX_TOP},
+  [2] = {.lex_state = LEX_TOP},
+  [3] = {.lex_state = LEX_TOP},
+  [4] = {.lex_state = LEX_TOP},
+  [5] = {.lex_state = LEX_TOP},
+  [6] = {.lex_state = LEX_PAREN_LEFT},
+  [7] = {.lex_state = LEX_TOP},
+  [8] = {.lex_state = LEX_PAREN_AFTER_LEFT},
+  [9] = {.lex_state = LEX_PAREN_RIGHT},
+  [10] = {.lex_state = LEX_TOP},
+  [11] = {.lex_state = LEX_PAREN_RIGHT},
+  [12] = {.lex_state = LEX_TOP},
+  [13] = {.lex_state = LEX_PAREN_CLOSE},
+  [14] = {.lex_state = LEX_TOP},
+  [15] = {.lex_state = LEX_PAREN_CLOSE},
+  [16] = {.lex_state = LEX_TOP},
+  [17] = {.lex_state = LEX_TOP},
 };
 
-#define FORTH_TERMINAL_ACTIONS(action) \
+#define FORTH_SIMPLE_TERMINAL_ACTIONS(action) \
   [sym_line_comment] = ACTIONS(action), \
-  [sym_paren_comment] = ACTIONS(action), \
-  [sym_stack_effect] = ACTIONS(action), \
   [sym_string] = ACTIONS(action), \
   [sym_number] = ACTIONS(action), \
   [sym_character_literal] = ACTIONS(action), \
@@ -260,44 +382,115 @@ static const TSLexerMode ts_lex_modes[STATE_COUNT] = {
   [sym_semicolon] = ACTIONS(action), \
   [sym_word] = ACTIONS(action)
 
+#define FORTH_TOP_LEVEL_FOLLOW_ACTIONS(action) \
+  [ts_builtin_sym_end] = ACTIONS(action), \
+  [sym_paren_delimiter] = ACTIONS(action), \
+  FORTH_SIMPLE_TERMINAL_ACTIONS(action)
+
 static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   [STATE(0)] = {
     [ts_builtin_sym_end] = ACTIONS(1),
-    FORTH_TERMINAL_ACTIONS(1),
+    [sym_paren_delimiter] = ACTIONS(1),
+    [sym_paren_content] = ACTIONS(1),
+    [sym_stack_effect_separator] = ACTIONS(1),
+    FORTH_SIMPLE_TERMINAL_ACTIONS(1),
   },
   [STATE(1)] = {
     [sym_source_file] = STATE(5),
     [aux_sym_source_file_repeat1] = STATE(2),
+    [sym_paren_comment] = STATE(3),
+    [sym_stack_effect] = STATE(3),
     [ts_builtin_sym_end] = ACTIONS(3),
-    FORTH_TERMINAL_ACTIONS(5),
+    [sym_paren_delimiter] = ACTIONS(7),
+    FORTH_SIMPLE_TERMINAL_ACTIONS(5),
   },
   [STATE(2)] = {
-    [ts_builtin_sym_end] = ACTIONS(7),
-    FORTH_TERMINAL_ACTIONS(9),
+    [sym_paren_comment] = STATE(4),
+    [sym_stack_effect] = STATE(4),
+    [ts_builtin_sym_end] = ACTIONS(9),
+    [sym_paren_delimiter] = ACTIONS(7),
+    FORTH_SIMPLE_TERMINAL_ACTIONS(11),
   },
   [STATE(3)] = {
-    [ts_builtin_sym_end] = ACTIONS(11),
-    FORTH_TERMINAL_ACTIONS(11),
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(13),
   },
   [STATE(4)] = {
-    [ts_builtin_sym_end] = ACTIONS(13),
-    FORTH_TERMINAL_ACTIONS(13),
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(15),
   },
   [STATE(5)] = {
-    [ts_builtin_sym_end] = ACTIONS(15),
+    [ts_builtin_sym_end] = ACTIONS(17),
+  },
+  [STATE(6)] = {
+    [sym_paren_delimiter] = ACTIONS(19),
+    [sym_paren_content] = ACTIONS(21),
+    [sym_stack_effect_separator] = ACTIONS(23),
+  },
+  [STATE(7)] = {
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(25),
+  },
+  [STATE(8)] = {
+    [sym_paren_delimiter] = ACTIONS(27),
+    [sym_stack_effect_separator] = ACTIONS(29),
+  },
+  [STATE(9)] = {
+    [sym_paren_delimiter] = ACTIONS(33),
+    [sym_paren_content] = ACTIONS(35),
+  },
+  [STATE(10)] = {
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(31),
+  },
+  [STATE(11)] = {
+    [sym_paren_delimiter] = ACTIONS(39),
+    [sym_paren_content] = ACTIONS(41),
+  },
+  [STATE(12)] = {
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(37),
+  },
+  [STATE(13)] = {
+    [sym_paren_delimiter] = ACTIONS(45),
+  },
+  [STATE(14)] = {
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(43),
+  },
+  [STATE(15)] = {
+    [sym_paren_delimiter] = ACTIONS(49),
+  },
+  [STATE(16)] = {
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(47),
+  },
+  [STATE(17)] = {
+    FORTH_TOP_LEVEL_FOLLOW_ACTIONS(51),
   },
 };
 
 static const TSParseActionEntry ts_parse_actions[] = {
-  [0] = {.entry = {.count = 0, .reusable = false}},
+  [0] = {.entry = {.count = 0, .reusable = false}}, 
   [1] = {.entry = {.count = 1, .reusable = false}}, RECOVER(),
   [3] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_source_file, 0, 0, 0),
   [5] = {.entry = {.count = 1, .reusable = true}}, SHIFT(3),
-  [7] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_source_file, 1, 0, 0),
-  [9] = {.entry = {.count = 1, .reusable = true}}, SHIFT(4),
-  [11] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 1, 0, 0),
-  [13] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0),
-  [15] = {.entry = {.count = 1, .reusable = true}}, ACCEPT_INPUT(),
+  [7] = {.entry = {.count = 1, .reusable = true}}, SHIFT(6),
+  [9] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_source_file, 1, 0, 0),
+  [11] = {.entry = {.count = 1, .reusable = true}}, SHIFT(4),
+  [13] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 1, 0, 0),
+  [15] = {.entry = {.count = 1, .reusable = true}}, REDUCE(aux_sym_source_file_repeat1, 2, 0, 0),
+  [17] = {.entry = {.count = 1, .reusable = true}}, ACCEPT_INPUT(),
+  [19] = {.entry = {.count = 1, .reusable = true}}, SHIFT(7),
+  [21] = {.entry = {.count = 1, .reusable = true}}, SHIFT(8),
+  [23] = {.entry = {.count = 1, .reusable = true}}, SHIFT(9),
+  [25] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_paren_comment, 2, 0, 0),
+  [27] = {.entry = {.count = 1, .reusable = true}}, SHIFT(10),
+  [29] = {.entry = {.count = 1, .reusable = true}}, SHIFT(11),
+  [31] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_paren_comment, 3, 0, 0),
+  [33] = {.entry = {.count = 1, .reusable = true}}, SHIFT(12),
+  [35] = {.entry = {.count = 1, .reusable = true}}, SHIFT(13),
+  [37] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_stack_effect, 3, 0, 0),
+  [39] = {.entry = {.count = 1, .reusable = true}}, SHIFT(14),
+  [41] = {.entry = {.count = 1, .reusable = true}}, SHIFT(15),
+  [43] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_stack_effect, 4, 0, 0),
+  [45] = {.entry = {.count = 1, .reusable = true}}, SHIFT(16),
+  [47] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_stack_effect, 4, 0, 0),
+  [49] = {.entry = {.count = 1, .reusable = true}}, SHIFT(17),
+  [51] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_stack_effect, 5, 0, 0),
 };
 
 #ifdef __cplusplus
@@ -335,7 +528,7 @@ TS_PUBLIC const TSLanguage *tree_sitter_forth(void) {
     .primary_state_ids = ts_primary_state_ids,
     .name = "forth",
     .max_reserved_word_set_size = 0,
-    .metadata = {.major_version = 0, .minor_version = 3, .patch_version = 0},
+    .metadata = {.major_version = 0, .minor_version = 1, .patch_version = 0},
   };
   return &language;
 }
