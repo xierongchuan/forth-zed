@@ -216,6 +216,8 @@ static bool lex_paren_content(TSLexer *lexer, bool stop_at_separator) {
     if (depth == 0 && c == ')') break;
 
     if (depth == 0 && stop_at_separator && c == '-') {
+      /* Look ahead for '--'. mark_end keeps the current token boundary, so
+         when content precedes the separator Tree-sitter resumes at '--'. */
       lexer->advance(lexer, false);
       if (lexer->lookahead == '-') {
         if (!started) {
@@ -290,6 +292,7 @@ static bool lex_top(TSLexer *lexer) {
   skip_space(lexer);
   if (lexer->eof(lexer)) return emit_end(lexer);
 
+  /* Backslash comment: from standalone '\\' through end of line. */
   if (lexer->lookahead == '\\') {
     do {
       lexer->advance(lexer, false);
@@ -299,6 +302,8 @@ static bool lex_top(TSLexer *lexer) {
     return true;
   }
 
+  /* Parenthesized forms are parsed structurally so stack effects can expose
+     their parameter text while ordinary '( ... )' remains a comment node. */
   if (lexer->lookahead == '(') return emit_paren_delimiter(lexer);
 
   char buf[256];
@@ -459,7 +464,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
 };
 
 static const TSParseActionEntry ts_parse_actions[] = {
-  [0] = {.entry = {.count = 0, .reusable = false}},
+  [0] = {.entry = {.count = 0, .reusable = false}}, 
   [1] = {.entry = {.count = 1, .reusable = false}}, RECOVER(),
   [3] = {.entry = {.count = 1, .reusable = true}}, REDUCE(sym_source_file, 0, 0, 0),
   [5] = {.entry = {.count = 1, .reusable = true}}, SHIFT(3),
@@ -523,7 +528,7 @@ TS_PUBLIC const TSLanguage *tree_sitter_forth(void) {
     .primary_state_ids = ts_primary_state_ids,
     .name = "forth",
     .max_reserved_word_set_size = 0,
-    .metadata = {.major_version = 0, .minor_version = 4, .patch_version = 0},
+    .metadata = {.major_version = 0, .minor_version = 1, .patch_version = 0},
   };
   return &language;
 }
