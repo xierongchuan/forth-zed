@@ -1,4 +1,4 @@
-# Froth / OOS Forth for Zed
+# OSS / ANS Forth for Zed
 
 A self-contained Zed language extension for ANS-style Forth and OOS Forth, the Forth version used by OpenOS.
 
