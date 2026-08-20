@@ -1,6 +1,6 @@
 id = "forth"
 name = "Froth / OOS Forth"
-description = "Forth support for Zed with first-class OOS Forth syntax: stack-effect highlighting, definitions, control flow, OOS runtime words, outline, indentation, comments, text objects, and snippets."
+description = "Forth support for Zed, including OOS Forth for OpenOS: stack-effect highlighting, definitions, control flow, outline, indentation, comments, text objects, and snippets."
 version = "0.2.0"
 schema_version = 1
 authors = ["Temur <xierongchuan@tutamail.com>"]
