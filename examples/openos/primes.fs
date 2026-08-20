@@ -5,19 +5,20 @@
 \
 \ Запуск:  forth usr/examples/primes.fs
 
-variable pflag          \ флаг: 1 — простое, 0 — составное
+variable pflag
+variable pnum
 
 : prime? ( n -- f )
-  1 pflag !             \ по умолчанию считаем простым
+  1 pflag !
   dup 2 < if
-    drop 0 pflag !      \ 0 и 1 — не простые
+    drop 0 pflag !
   else
-    dup 2 do            \ ( n n 2 ) -> DO берёт limit=n, start=2; n остаётся
-      over i mod 0= if  \ n делится на i без остатка?
-        0 pflag !       \ значит составное
+    pnum !
+    pnum @ 2 do
+      pnum @ i mod 0= if
+        0 pflag !
       then
     loop
-    drop
   then
   pflag @
 ;

@@ -1,16 +1,60 @@
 [
-  {"type":"source_file","named":true,"root":true,"fields":{},"children":{"multiple":true,"required":false,"types":[
-    {"type":"line_comment","named":true},{"type":"paren_comment","named":true},{"type":"stack_effect","named":true},
-    {"type":"string","named":true},{"type":"number","named":true},{"type":"character_literal","named":true},
-    {"type":"colon","named":true},{"type":"semicolon","named":true},{"type":"word","named":true}
-  ]}},
-  {"type":"line_comment","named":true},
-  {"type":"paren_comment","named":true},
-  {"type":"stack_effect","named":true},
-  {"type":"string","named":true},
-  {"type":"number","named":true},
-  {"type":"character_literal","named":true},
-  {"type":"colon","named":true},
-  {"type":"semicolon","named":true},
-  {"type":"word","named":true}
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {"type": "line_comment", "named": true},
+        {"type": "paren_comment", "named": true},
+        {"type": "stack_effect", "named": true},
+        {"type": "string", "named": true},
+        {"type": "number", "named": true},
+        {"type": "character_literal", "named": true},
+        {"type": "colon", "named": true},
+        {"type": "semicolon", "named": true},
+        {"type": "word", "named": true}
+      ]
+    }
+  },
+  {
+    "type": "paren_comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {"type": "paren_delimiter", "named": true},
+        {"type": "paren_content", "named": true}
+      ]
+    }
+  },
+  {
+    "type": "stack_effect",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {"type": "paren_delimiter", "named": true},
+        {"type": "paren_content", "named": true},
+        {"type": "stack_effect_separator", "named": true}
+      ]
+    }
+  },
+  {"type": "line_comment", "named": true},
+  {"type": "paren_delimiter", "named": true},
+  {"type": "paren_content", "named": true},
+  {"type": "stack_effect_separator", "named": true},
+  {"type": "string", "named": true},
+  {"type": "number", "named": true},
+  {"type": "character_literal", "named": true},
+  {"type": "colon", "named": true},
+  {"type": "semicolon", "named": true},
+  {"type": "word", "named": true}
 ]

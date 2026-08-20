@@ -9,8 +9,8 @@
     }
   ],
   "metadata": {
-    "version": "0.3.0",
+    "version": "0.4.0",
     "license": "MIT",
-    "description": "Self-contained ANS/OpenOS Forth grammar for Zed"
+    "description": "Structured ANS-style Forth and OOS Forth grammar for Zed"
   }
 }

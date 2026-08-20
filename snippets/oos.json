@@ -1,0 +1,47 @@
+{
+  "OOS: getpid": {
+    "prefix": "getpid",
+    "body": ["getpid"],
+    "description": "OOS Forth: push the current process ID ( -- pid )"
+  },
+  "OOS: argc": {
+    "prefix": "argc",
+    "body": ["argc"],
+    "description": "OOS Forth: push the program argument count ( -- n )"
+  },
+  "OOS: arg": {
+    "prefix": "arg",
+    "body": ["${1:0} arg"],
+    "description": "OOS Forth: get argument N as address and length ( n -- addr len )"
+  },
+  "OOS: argument as number": {
+    "prefix": "argnum",
+    "body": ["${1:0} arg s>number"],
+    "description": "OOS Forth: read argument N and convert it to a number"
+  },
+  "OOS: s>number": {
+    "prefix": "s>number",
+    "body": ["s>number"],
+    "description": "OOS Forth: convert a string to a number ( addr len -- n )"
+  },
+  "OOS: ms": {
+    "prefix": "ms",
+    "body": ["${1:300} ms"],
+    "description": "OOS Forth: sleep for a number of milliseconds ( ms -- )"
+  },
+  "OOS: load-file": {
+    "prefix": "load-file",
+    "body": ["s\" ${1:path}\" load-file"],
+    "description": "OOS Forth: load a file into the data area ( fname-addr fname-len -- buf len )"
+  },
+  "OOS: save-file": {
+    "prefix": "save-file",
+    "body": ["save-file"],
+    "description": "OOS Forth: write a buffer to a file ( buf-addr buf-len fname-addr fname-len -- w )"
+  },
+  "OOS: bye": {
+    "prefix": "bye",
+    "body": ["bye"],
+    "description": "OOS Forth: leave the interpreter"
+  }
+}
