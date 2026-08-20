@@ -13,11 +13,11 @@ tree_sitter = json.load(open('tree-sitter.json', encoding='utf-8'))
 for snippet_file in Path('snippets').glob('*.json'):
     json.load(open(snippet_file, encoding='utf-8'))
 
-assert config['name'] == 'Froth / OOS Forth'
-assert manifest['name'] == 'Froth / OOS Forth'
-assert manifest['version'] == '0.2.0'
+assert config['name'] == 'OSS / ANS Forth'
+assert manifest['name'] == 'OSS / ANS Forth'
+assert manifest['version'] == '0.1.0'
 assert './snippets/oos.json' in manifest['snippets']
-assert tree_sitter['metadata']['version'] == '0.4.0'
+assert tree_sitter['metadata']['version'] == '0.1.0'
 
 nodes = {x['type'] for x in json.load(open('src/node-types.json', encoding='utf-8'))}
 for p in Path('languages/forth').glob('*.scm'):
