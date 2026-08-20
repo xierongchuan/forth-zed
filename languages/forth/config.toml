@@ -1,4 +1,4 @@
-name = "Froth / OOS Forth"
+name = "OSS / ANS Forth"
 grammar = "forth"
 path_suffixes = ["fs", "fth", "4th", "frt", "blk"]
 line_comments = ["\\ "]
