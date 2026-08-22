@@ -13,9 +13,9 @@ tree_sitter = json.load(open('tree-sitter.json', encoding='utf-8'))
 for snippet_file in Path('snippets').glob('*.json'):
     json.load(open(snippet_file, encoding='utf-8'))
 
-assert config['name'] == 'Forth / OOS Forth'
+assert config['name'] == 'OOS / ANS Forth'
 assert manifest['id'] == 'forth'
-assert manifest['name'] == 'Forth / OOS Forth'
+assert manifest['name'] == 'OOS / ANS Forth'
 assert manifest['version'] == '0.1.0'
 assert manifest['repository'] == 'https://github.com/xierongchuan/forth-zed'
 assert './snippets/oos.json' in manifest['snippets']
