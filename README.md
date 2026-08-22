@@ -23,7 +23,7 @@ Open Zed and run `zed: install dev extension`, selecting this directory.
 - snippet-based completion without an LSP
 - OpenOS Forth words including `depth`, `getpid`, `argc`, `arg`, `s>number`, `load-file`, `save-file`, `peek`, `poke`, `call`, `hex,`, `data-base`, `ms`, `bye`, `<=`, and `>=`
 - `$HEX`, `0xHEX`, `%binary`, `&octal`, decimal and floating-point numbers
-- `.\"...\"`, `s\"...\"`, `c\"...\"`, `abort\"...\"` strings
+- standard Forth string forms, including dot-quote, s-quote, c-quote, and abort-quote
 
 ## Regression examples
 
