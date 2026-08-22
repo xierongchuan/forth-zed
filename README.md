@@ -1,24 +1,18 @@
-# OSS / ANS Forth for Zed
+# Forth / OOS Forth
 
-A self-contained Zed language extension for ANS-style Forth and OOS Forth, the Forth version used by OpenOS.
+A self-contained Zed language extension for ANS-style Forth and OpenOS Forth (OOS Forth).
 
 The extension provides syntax highlighting, outline support, indentation, comments, text objects and snippets without requiring an LSP.
 
 ## Install locally
 
-Run once from this directory:
-
-```bash
-./prepare.sh
-```
-
-Then open Zed and run `zed: install dev extension`, selecting this directory.
+Open Zed and run `zed: install dev extension`, selecting this directory.
 
 ## Included editor support
 
 - `.fs`, `.fth`, `.4th`, `.frt`, `.blk` detection
 - Tree-sitter highlighting and lexical structure
-- `\` line comments and parenthesized `( ... )` comments
+- `\\` line comments and parenthesized `( ... )` comments
 - structured stack effects such as `( addr len -- buf n )`
 - stack-effect parameter highlighting distinct from comment text
 - `: name ... ;` definitions in Outline
@@ -27,13 +21,13 @@ Then open Zed and run `zed: install dev extension`, selecting this directory.
 - comment text objects
 - ANS-style Forth words, operators and control flow
 - snippet-based completion without an LSP
-- OOS Forth words including `depth`, `getpid`, `argc`, `arg`, `s>number`, `load-file`, `save-file`, `peek`, `poke`, `call`, `hex,`, `data-base`, `ms`, `bye`, `<=`, and `>=`
+- OpenOS Forth words including `depth`, `getpid`, `argc`, `arg`, `s>number`, `load-file`, `save-file`, `peek`, `poke`, `call`, `hex,`, `data-base`, `ms`, `bye`, `<=`, and `>=`
 - `$HEX`, `0xHEX`, `%binary`, `&octal`, decimal and floating-point numbers
-- `."..."`, `s"..."`, `c"..."`, `abort"..."` strings
+- `.\"...\"`, `s\"...\"`, `c\"...\"`, `abort\"...\"` strings
 
 ## Regression examples
 
-`examples/openos/` contains small OOS Forth examples used to verify highlighting and parsing of definitions, variables, stack effects, control flow, strings, arithmetic, file/process words and MMIO-style words.
+`examples/openos/` contains small OpenOS Forth examples used to verify highlighting and parsing of definitions, variables, stack effects, control flow, strings, arithmetic, file/process words and MMIO-style words.
 
 ## Verify the package
 
@@ -41,7 +35,7 @@ Then open Zed and run `zed: install dev extension`, selecting this directory.
 ./verify.sh
 ```
 
-The check validates JSON/TOML files, Tree-sitter query node names, the bundled parser, regression examples and the absence of accidental external runtime dependencies.
+The check validates JSON/TOML files, Tree-sitter query node names, the bundled parser, regression examples and the publication manifest.
 
 If the `tree-sitter` CLI is installed, the verification script also runs the corpus tests.
 
