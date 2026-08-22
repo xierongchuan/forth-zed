@@ -8,15 +8,19 @@ import json, re, tomllib
 from pathlib import Path
 
 config = tomllib.loads(Path('languages/forth/config.toml').read_text(encoding='utf-8'))
-manifest = tomllib.loads(Path('extension.toml.template').read_text(encoding='utf-8'))
+manifest = tomllib.loads(Path('extension.toml').read_text(encoding='utf-8'))
 tree_sitter = json.load(open('tree-sitter.json', encoding='utf-8'))
 for snippet_file in Path('snippets').glob('*.json'):
     json.load(open(snippet_file, encoding='utf-8'))
 
-assert config['name'] == 'OSS / ANS Forth'
-assert manifest['name'] == 'OSS / ANS Forth'
+assert config['name'] == 'OOS / ANS Forth'
+assert manifest['id'] == 'forth'
+assert manifest['name'] == 'OOS / ANS Forth'
 assert manifest['version'] == '0.1.0'
+assert manifest['repository'] == 'https://github.com/xierongchuan/forth-zed'
 assert './snippets/oos.json' in manifest['snippets']
+assert manifest['grammars']['forth']['repository'] == 'https://github.com/xierongchuan/forth-zed'
+assert re.fullmatch(r'[0-9a-f]{40}', manifest['grammars']['forth']['rev'])
 assert tree_sitter['metadata']['version'] == '0.1.0'
 
 nodes = {x['type'] for x in json.load(open('src/node-types.json', encoding='utf-8'))}
@@ -46,13 +50,13 @@ fi
 
 count=$(find examples/openos -maxdepth 1 -type f -name '*.fs' | wc -l)
 [ "$count" -eq 12 ]
-echo "OOS regression examples: $count/12 present"
+echo "OpenOS Forth regression examples: $count/12 present"
 
 if grep -RInE 'github\.com|gitlab\.com|bitbucket\.org|AlexanderBrevig|https?://' . \
-    --exclude-dir=.git --exclude='README.md' --exclude='verify.sh' >/dev/null; then
-  echo "error: external repository/URL reference found" >&2
+    --exclude-dir=.git --exclude='README.md' --exclude='verify.sh' --exclude='extension.toml' >/dev/null; then
+  echo "error: unexpected external repository/URL reference found" >&2
   grep -RInE 'github\.com|gitlab\.com|bitbucket\.org|AlexanderBrevig|https?://' . \
-    --exclude-dir=.git --exclude='README.md' --exclude='verify.sh' >&2
+    --exclude-dir=.git --exclude='README.md' --exclude='verify.sh' --exclude='extension.toml' >&2
   exit 1
 fi
-echo "External repository references: none"
+echo "Unexpected external repository references: none"
