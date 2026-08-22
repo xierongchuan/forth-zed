@@ -12,7 +12,7 @@ Open Zed and run `zed: install dev extension`, selecting this directory.
 
 - `.fs`, `.fth`, `.4th`, `.frt`, `.blk` detection
 - Tree-sitter highlighting and lexical structure
-- `\\` line comments and parenthesized `( ... )` comments
+- `\` line comments and parenthesized `( ... )` comments
 - structured stack effects such as `( addr len -- buf n )`
 - stack-effect parameter highlighting distinct from comment text
 - `: name ... ;` definitions in Outline
