@@ -1,6 +1,6 @@
 # Forth / OOS Forth
 
-A self-contained Zed language extension for ANS-style Forth and OpenOS Forth (OOS Forth).
+A self-contained Zed language extension for ANS-style Forth and OpenOS Forth.
 
 The extension provides syntax highlighting, outline support, indentation, comments, text objects and snippets without requiring an LSP.
 
