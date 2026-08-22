@@ -1,4 +1,4 @@
-# Forth / OOS Forth
+# OOS / ANS Forth
 
 A self-contained Zed language extension for ANS-style Forth and OpenOS Forth.
 
